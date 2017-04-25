@@ -1,1 +1,6 @@
+#VS code section
 .vscode/
+
+#Idea section
+.idea/
+*.iml
