@@ -1,8 +1,11 @@
 #!groovy
 node {
-   stage("Start Test") {
-    build 'TestGitHub'
-    def ver = GroovySystem.version
-    echo ver
+   stage('Pull code') {
+       echo 'Start fetch from github'
+       git([url: 'https://github.com/EricomSoftwareLtd/SB.git', credentialsId: 'ozlevka-github'])
+   }
+   
+   stage("Buid Images") {
+        echo 'Start Build'
    }
 }
