@@ -6,6 +6,11 @@ node {
    }
    
    stage("Buid Images") {
-        echo 'Start Build'
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ozlevka-github',
+                            usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                //available as an env variable, but will be masked if you try to print it out any which way
+                sh 'echo $PASSWORD'
+                echo "${env.USERNAME}"
+        }
    }
 }
