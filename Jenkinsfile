@@ -7,7 +7,7 @@ node {
    
    stage("Buid Images") {
         withCredentials([usernameColonPassword(credentialsId: 'ozlevka-github', variable: 'USERPASS')]) {
-            echo '${env.USERPASS}'
+            echo "${env.USERPASS}"
         }
    }
 }
