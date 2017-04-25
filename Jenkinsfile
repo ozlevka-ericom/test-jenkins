@@ -6,11 +6,8 @@ node {
    }
    
    stage("Buid Images") {
-        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ozlevka-github',
-                            usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                //available as an env variable, but will be masked if you try to print it out any which way
-                sh 'echo $PASSWORD'
-                echo "${env.USERNAME}"
+        withCredentials([usernameColonPassword(credentialsId: 'mylogin', variable: 'USERPASS')]) {
+            echo '${env.USERPASS}'
         }
    }
 }
