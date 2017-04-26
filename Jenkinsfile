@@ -7,7 +7,9 @@ node {
 
    docker.withRegistry('https://hub.docker.com', 'beny-docker') {
         stage('Pull ubuntu Image') {
-            sh 'docker pull securebrowsing/shield-cef'
+            def ubuntu = docker.image('securebrowsing/shield-cef')
+            ubuntu.pull()
+            echo 'Image pulled'
         }
     }
 }
