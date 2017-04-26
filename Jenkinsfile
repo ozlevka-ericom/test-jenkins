@@ -8,7 +8,7 @@ node {
    stage("Buid Images") {
         docker.withRegistry('https://hub.docker.com', 'beny-docker') {
             stage('Pull ubuntu Image') {
-                def ubuntu = docker.image('securebrowsing/secure-remote-browser-ubuntu-base:latest')
+                def ubuntu = docker.image('securebrowsing/secure-remote-browser-ubuntu-base')
                 ubuntu.pull()
                 echo 'Ubuntu image arrive'
             }
