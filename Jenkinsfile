@@ -21,7 +21,7 @@ node {
                 echo 'Fetch ubuntu image success'
                 sh 'docker build -t securebrowsing/secure-remote-browser-ubuntu-nodejs-xdummy Containers/Docker/secure-remote-browser-ubuntu-nodejs-xdummy'
                 echo 'Build nodejs dummy success'
-                sh 'cd securebrowsing/shield-cef Containers/Docker/shield-cef && ./_build.sh'
+                sh 'cd Containers/Docker/shield-cef && ./_build.sh'
                 echo 'build cef image success'
             }
 
