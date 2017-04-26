@@ -2,11 +2,10 @@
 node {
    stage('Pull code') {
        git([url: 'https://github.com/EricomSoftwareLtd/SB.git', credentialsId: 'ozlevka-github'])
-
    }
 
    stage('Check changes') {
-       echo 'Test latest git release'
+       echo 'Test changes in components'
    }
 
 
@@ -22,7 +21,7 @@ node {
                 echo 'Fetch ubuntu image success'
                 sh 'docker build -t securebrowsing/secure-remote-browser-ubuntu-nodejs-xdummy Containers/Docker/secure-remote-browser-ubuntu-nodejs-xdummy'
                 echo 'Build nodejs dummy success'
-                sh 'docker build -t securebrowsing/shield-cef Containers/Docker/shield-cef'
+                sh 'cd securebrowsing/shield-cef Containers/Docker/shield-cef && ./_build.sh'
                 echo 'build cef image success'
             }
 
