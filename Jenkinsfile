@@ -11,8 +11,8 @@ node {
 
 
    stage('Make params') {
-       env.HELLOWORLD = 'Hello world'
-       sh 'echo $HELLOWORLD'
+       env.REPO_CWD = pwd()
+       sh 'echo $REPO_CWD'
    }
 
    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'beny-docker',
