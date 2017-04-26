@@ -1,7 +1,8 @@
 #!groovy
 node {
    stage('Pull code') {
-       git([url: 'https://github.com/EricomSoftwareLtd/SB.git', credentialsId: 'ozlevka-github'])
+       def a = git([url: 'https://github.com/EricomSoftwareLtd/SB.git', credentialsId: 'ozlevka-github', changelog: true])
+       echo a
    }
 
    stage('Check changes') {
