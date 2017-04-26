@@ -5,11 +5,8 @@ node {
        git([url: 'https://github.com/EricomSoftwareLtd/SB.git', credentialsId: 'ozlevka-github'])
    }
 
-   docker.withRegistry('https://hub.docker.com', 'beny-docker') {
-        stage('Pull ubuntu Image') {
-            def ubuntu = docker.image('ubuntu:latest')
-            ubuntu.pull()
-            echo 'Image pulled'
-        }
+   withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'beny-docker',
+                            usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            sh 'docker logout && docker login -u $USERNAME -p $PASSWORD && docker pull securebrowsing/secure-remote-browser-ubuntu-base'
     }
 }
