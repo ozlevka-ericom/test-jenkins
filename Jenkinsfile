@@ -70,7 +70,6 @@ node {
        withCredentials([[$class          : 'UsernamePasswordMultiBinding', credentialsId: 'beny-docker',
                              usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                 def list_of_changes = builder.changesList()
-                echo list_of_changes
                 stage('Build Images') {
                     if(builder.executeBuild('UBUNTU')) {
                         sh 'docker logout && docker login -u $USERNAME -p $PASSWORD && docker pull securebrowsing/secure-remote-browser-ubuntu-base'
