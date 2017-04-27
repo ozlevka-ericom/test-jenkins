@@ -31,12 +31,7 @@ class ComponentsBuilder implements java.io.Serializable {
 
     //@NonCPS
     def changesList() {
-        def lst = []
-        changedComponents.each {
-            lst.add(it.key)
-        }
-
-        lst
+        changedComponents.keySet() as List
     }
 }
 

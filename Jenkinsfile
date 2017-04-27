@@ -27,16 +27,10 @@ class ComponentsBuilder implements java.io.Serializable {
     def executeBuild(String component) {
         changedComponents.containsKey(component)
     }
-}
 
-@NonCPS
-def changesList(Map<?,?> map) {
-    def lst = []
-    for(def entry in map) {
-        lst.add(entry.key)
+    def changesList() {
+        changedComponents.keySet() as List
     }
-
-    lst
 }
 
 node {
@@ -69,7 +63,7 @@ node {
 
        withCredentials([[$class          : 'UsernamePasswordMultiBinding', credentialsId: 'beny-docker',
                              usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                def list_of_changes = changesList(builder.changedComponents)
+                def list_of_changes = builder.changesList()
                 echo list_of_changes
                 stage('Build Images') {
                     if(builder.executeBuild('UBUNTU')) {
