@@ -32,8 +32,8 @@ class ComponentsBuilder implements java.io.Serializable {
 @NonCPS
 def changesList(Map<?,?> map) {
     def lst = []
-    map.each {
-        lst.add(it.key)
+    for(def entry in map) {
+        lst.add(entry.key)
     }
 
     lst
