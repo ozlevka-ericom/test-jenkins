@@ -10,6 +10,7 @@ class ComponentsBuilder implements java.io.Serializable {
         components["ELK"] = "Containers/Docker/shield-elk"
         components["UBUNTU"] = "Containers/Docker/secure-remote-browser-ubuntu-base"
         components["NODEJS"] = "Containers/Docker/secure-remote-browser-ubuntu-nodejs-xdummy"
+        components["CONSUL"] = "Containers/Docker/shield-configuration"
     }
 
     def findComponent(String path) {
@@ -69,7 +70,8 @@ def testArray = [
         "Containers/Docker/shield-icap/web/AccessNow/src/vendor.min.js.gz",
         "Containers/Docker/shield-icap/web/AccessNow/fonts/fontawesome-webfont.woff.gz",
         "Containers/Docker/shield-icap/web/AccessNow/resources/lang/12Dec2012ANChineseSimplified.lang.gz",
-        "Containers/Docker/shield-icap/web/AccessNow/fonts/AvenirNextLTPro-Bold.min.svg.gz"
+        "Containers/Docker/shield-icap/web/AccessNow/fonts/AvenirNextLTPro-Bold.min.svg.gz",
+        "Containers/Docker/shield-configuration/Dockerfile"
 ]
 
 def builder = new ComponentsBuilder()
@@ -77,7 +79,7 @@ testArray.each {
     builder.appendComponent(it)
 }
 
-println builder.executeBuild('ELK')
+println builder.executeBuild('CONSUL')
 println builder.changesList()
 
 
