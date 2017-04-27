@@ -6,6 +6,7 @@ class ComponentsBuilder implements java.io.Serializable {
     ComponentsBuilder() {
         components["CEF"] = "Containers/Docker/shield-cef"
         components["ICAP"] = "Containers/Docker/shield-icap"
+        components["CONSUL"] = "Containers/Docker/shield-configuration"
         components["ELK"] = "Containers/Docker/shield-elk"
         components["UBUNTU"] = "Containers/Docker/secure-remote-browser-ubuntu-base"
         components["NODEJS"] = "Containers/Docker/secure-remote-browser-ubuntu-nodejs-xdummy"
@@ -65,10 +66,10 @@ node {
                         echo 'Fetch ubuntu image success'
                     }
 
-                    for(el in builder.changedComponents) {
-                        def buildPath = builder.components[el.key]
+                    builder.changedComponents.each {
+                        def buildPath = builder.components[it.key]
                         sh "cd ${buildPath} && ./_build.sh"
-                        echo "Param ${el.key} build success"
+                        echo "Param ${it.key} build success"
                     }
                 }
 
