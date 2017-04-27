@@ -15,11 +15,11 @@ class ComponentsBuilder implements java.io.Serializable {
         def lst = components.keySet() as List
         for(def key in lst) {
             if(path.startsWith(key.toString())) {
-                return true
+                return key
             }
         }
 
-        return false
+        return null
     }
 
     def appendComponent(String path) {
