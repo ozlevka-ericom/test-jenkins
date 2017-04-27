@@ -69,16 +69,20 @@ node {
 
        withCredentials([[$class          : 'UsernamePasswordMultiBinding', credentialsId: 'beny-docker',
                              usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                def list_of_changes = changesList(builder.changedComponents)
+                echo list_of_changes
                 stage('Build Images') {
                     if(builder.executeBuild('UBUNTU')) {
                         sh 'docker logout && docker login -u $USERNAME -p $PASSWORD && docker pull securebrowsing/secure-remote-browser-ubuntu-base'
                         echo 'Fetch ubuntu image success'
                     }
 
-                    changesList(builder.changedComponents).each {
-                        def buildPath = builder.components[it]
+                    for(i = 0; i < list_of_changes.size(); i++) {
+
+                        def k = list_of_changes[i]
+                        def buildPath = builder.components[k]
                         sh "cd ${buildPath} && ./_build.sh"
-                        echo "Param ${it} build success"
+                        echo "Param ${k} build success"
                     }
 
                 }
@@ -92,10 +96,11 @@ node {
                 }
 
                 stage('Push Images') {
-                    changesList(builder.changedComponents).each {
-                        def buildPath = builder.components[it]
-                        sh "cd ${buildPath} && ./_upload.sh"
-                        echo "Param ${it} upload success"
+                    for(i = 0; i < list_of_changes.size(); i++) {
+                        def k = list_of_changes[i]
+                        def buildPath = builder.components[k]
+                        //sh "cd ${buildPath} && ./_upload.sh"
+                        echo "Param ${k} build success"
                     }
                 }
         }
