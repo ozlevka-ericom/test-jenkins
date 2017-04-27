@@ -1,7 +1,7 @@
 #!groovy
 node {
    def workDir = pwd()
-   def comp = load "${workDir}@script/components.groovy"
+   def comp = load "${workDir}/script/components.groovy"
    def builder = comp.getBuilder()
    stage('Pull code') {
        git([url: 'https://github.com/EricomSoftwareLtd/SB.git', credentialsId: 'ozlevka-github', changelog: true])
@@ -18,6 +18,8 @@ node {
                 }
             }
         }
+
+       echo builder
    }
 
    stage('Check changes') {
