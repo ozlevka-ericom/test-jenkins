@@ -50,11 +50,6 @@ node {
        }
    }
 
-   stage('Check changes') {
-       echo 'Test changes in components'
-   }
-
-
    if (builder.changedComponents.size() > 0) {
        stage('Make params') {
            withEnv(["REPO_CWD=${pwd()}"]) {
@@ -65,12 +60,16 @@ node {
        withCredentials([[$class          : 'UsernamePasswordMultiBinding', credentialsId: 'beny-docker',
                              usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                 stage('Build Images') {
-                    sh 'docker logout && docker login -u $USERNAME -p $PASSWORD && docker pull securebrowsing/secure-remote-browser-ubuntu-base'
-                    echo 'Fetch ubuntu image success'
-                    sh 'docker build -t securebrowsing/secure-remote-browser-ubuntu-nodejs-xdummy Containers/Docker/secure-remote-browser-ubuntu-nodejs-xdummy'
-                    echo 'Build nodejs dummy success'
-                    sh 'cd Containers/Docker/shield-cef && ./_build.sh'
-                    echo 'build cef image success'
+                    if(builder.executeBuild('UBUNTU')) {
+                        sh 'docker logout && docker login -u $USERNAME -p $PASSWORD && docker pull securebrowsing/secure-remote-browser-ubuntu-base'
+                        echo 'Fetch ubuntu image success'
+                    }
+
+                    for(el in builder.changedComponents) {
+                        def buildPath = builder.components[el.key]
+                        sh "cd ${buildPath} && ./_build.sh"
+                        echo "Param ${el.key} build success"
+                    }
                 }
 
                 stage('Test System') {
@@ -82,7 +81,11 @@ node {
                 }
 
                 stage('Push Images') {
-                    echo 'Push images'
+                    for(el in builder.changedComponents) {
+                        /*def buildPath = builder.components[el.key]
+                        sh "cd ${buildPath} && ./_upload.sh"*/
+                        echo "Param ${el.key} upload success"
+                    }
                 }
         }
    } else {
