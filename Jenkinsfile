@@ -51,7 +51,7 @@ node {
 
        if(builder.changedComponents.size() == 0) {
            currentBuild.result = 'NOTCHANGED'
-           sh 'exit 0'
+           return
        }
    }
 
