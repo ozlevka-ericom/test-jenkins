@@ -14,7 +14,7 @@ class ComponentsBuilder implements java.io.Serializable {
     def findComponent(String path) {
         def lst = components.keySet() as List
         for(def key in lst) {
-            if(path.startsWith(key.toString())) {
+            if(path.startsWith(components[key].toString())) {
                 return key
             }
         }

@@ -13,9 +13,14 @@ class ComponentsBuilder implements java.io.Serializable {
     }
 
     def findComponent(String path) {
-        components.find {
-            path.startsWith(it.value.toString())
-        }?.key
+        def lst = components.keySet() as List
+        for(def key in lst) {
+            if(path.startsWith(components[key].toString())) {
+                return key
+            }
+        }
+
+        return null
     }
 
     def appendComponent(String path) {
@@ -29,7 +34,6 @@ class ComponentsBuilder implements java.io.Serializable {
         changedComponents.containsKey(component)
     }
 
-    //@NonCPS
     def changesList() {
         changedComponents.keySet() as List
     }
