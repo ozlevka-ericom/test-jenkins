@@ -75,7 +75,7 @@ node {
                         echo 'Fetch ubuntu image success'
                     }
 
-                    changesList().each {
+                    changesList(builder.changedComponents).each {
                         def buildPath = builder.components[it]
                         sh "cd ${buildPath} && ./_build.sh"
                         echo "Param ${it} build success"
@@ -92,7 +92,7 @@ node {
                 }
 
                 stage('Push Images') {
-                    changesList().each {
+                    changesList(builder.changedComponents).each {
                         def buildPath = builder.components[it]
                         sh "cd ${buildPath} && ./_upload.sh"
                         echo "Param ${it} upload success"
