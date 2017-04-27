@@ -1,4 +1,6 @@
 #!groovy
+println (new java.io.File( "." )).getCanonicalPath()
+
 node {
 
    //def builder = comp.getBuilder()
@@ -17,8 +19,6 @@ node {
                 }
             }
         }
-
-       echo builder
    }
 
    stage('Check changes') {
