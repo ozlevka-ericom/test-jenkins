@@ -97,7 +97,7 @@ node {
                     for(i = 0; i < list_of_changes.size(); i++) {
                         def k = list_of_changes[i]
                         def buildPath = builder.components[k]
-                        //sh "cd ${buildPath} && ./_upload.sh"
+                        sh "cd ${buildPath} && ./_upload.sh"
                         echo "Param ${k} upload success"
                     }
                 }
