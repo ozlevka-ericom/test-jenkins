@@ -28,6 +28,16 @@ class ComponentsBuilder implements java.io.Serializable {
     def executeBuild(String component) {
         changedComponents.containsKey(component)
     }
+
+    //@NonCPS
+    def changesList() {
+        def lst = []
+        changedComponents.each {
+            lst.add(it.key)
+        }
+
+        lst
+    }
 }
 
 
@@ -69,5 +79,6 @@ testArray.each {
 }
 
 println builder.executeBuild('ELK')
+println builder.changesList()
 
 

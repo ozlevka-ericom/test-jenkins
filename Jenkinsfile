@@ -6,7 +6,6 @@ class ComponentsBuilder implements java.io.Serializable {
     ComponentsBuilder() {
         components["CEF"] = "Containers/Docker/shield-cef"
         components["ICAP"] = "Containers/Docker/shield-icap"
-        components["CONSUL"] = "Containers/Docker/shield-configuration"
         components["ELK"] = "Containers/Docker/shield-elk"
         components["UBUNTU"] = "Containers/Docker/secure-remote-browser-ubuntu-base"
         components["NODEJS"] = "Containers/Docker/secure-remote-browser-ubuntu-nodejs-xdummy"
@@ -27,6 +26,16 @@ class ComponentsBuilder implements java.io.Serializable {
 
     def executeBuild(String component) {
         changedComponents.containsKey(component)
+    }
+
+    @NonCPS
+    def changesList() {
+        def lst = []
+        changedComponents.each {
+            lst.add(it.key)
+        }
+
+        lst
     }
 }
 
@@ -66,12 +75,10 @@ node {
                         echo 'Fetch ubuntu image success'
                     }
 
-                    for ( int i = 0; i < builder.changedComponents.size(); i++ ) {
-
-                        final k = new String( builder.changedComponents.entrySet().toArray()[i].key )
-                        def buildPath = builder.components[k]
+                    builder.changesList().each {
+                        def buildPath = builder.components[it]
                         sh "cd ${buildPath} && ./_build.sh"
-                        echo "Param ${it.key} build success"
+                        echo "Param ${it} build success"
                     }
 
                 }
@@ -85,12 +92,10 @@ node {
                 }
 
                 stage('Push Images') {
-                    for ( int i = 0; i < builder.changedComponents.size(); i++ ) {
-
-                        final k = new String( builder.changedComponents.entrySet().toArray()[i].key )
-                        def buildPath = builder.components[k]
+                    builder.changesList().each {
+                        def buildPath = builder.components[it]
                         sh "cd ${buildPath} && ./_upload.sh"
-                        echo "Param ${it.key} upload success"
+                        echo "Param ${it} upload success"
                     }
                 }
         }
