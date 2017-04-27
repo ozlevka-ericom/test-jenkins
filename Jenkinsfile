@@ -81,6 +81,7 @@ node {
 
                         def k = list_of_changes[i]
                         def buildPath = builder.components[k]
+                        echo buildPath
                         sh "cd ${buildPath} && ./_build.sh"
                         echo "Param ${k} build success"
                     }
