@@ -44,12 +44,12 @@ node {
                 for (int k = 0; k < files.size(); k++) {
                     def file = files[k]
                     //echo "  ${file.editType.name} ${file.path}"
-                    builder.appendComponent(file.path)
+                    builder.appendComponent file.path
                 }
             }
        }
 
-       if(builder.appendComponent.size() == 0) {
+       if(builder.changedComponents.size() == 0) {
            currentBuild.result = 'NOTCHANGED'
            sh 'exit 0'
        }
