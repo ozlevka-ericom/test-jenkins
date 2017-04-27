@@ -1,8 +1,8 @@
 #!groovy
+echo pwd()
 node {
-   def workDir = pwd()
-   def comp = load "${workDir}@script/components.groovy"
-   def builder = comp.getBuilder()
+
+   //def builder = comp.getBuilder()
    stage('Pull code') {
        git([url: 'https://github.com/EricomSoftwareLtd/SB.git', credentialsId: 'ozlevka-github', changelog: true])
        def changeLogSets = currentBuild.rawBuild.changeSets
