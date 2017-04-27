@@ -1,5 +1,5 @@
 #!groovy
-class ComponentsBuilder {
+class ComponentsBuilder implements java.io.Serializable {
     def components = [:]
     def changedComponents = [:]
 
