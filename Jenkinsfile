@@ -1,5 +1,4 @@
 #!groovy
-echo pwd()
 node {
 
    //def builder = comp.getBuilder()
