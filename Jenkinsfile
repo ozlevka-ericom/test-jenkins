@@ -1,7 +1,7 @@
 #!groovy
 class ComponentsBuilder {
     def components = [:]
-    def changedComponents = []
+    def changedComponents = [:]
 
     ComponentsBuilder() {
         components["CEF"] = "Containers/Docker/shield-cef"
@@ -16,11 +16,22 @@ class ComponentsBuilder {
             path.startsWith(it.value.toString())
         }?.key
     }
+
+    def appendComponent(String path) {
+        def k = findComponent(path)
+        if(k) {
+            changedComponents[k] = true
+        }
+    }
+
+    def executeBuild(String component) {
+        changedComponents.containsKey(component)
+    }
 }
 
 node {
 
-   //def builder = comp.getBuilder()
+   def builder = comp.getBuilder()
    stage('Pull code') {
        git([url: 'https://github.com/EricomSoftwareLtd/SB.git', credentialsId: 'ozlevka-github', changelog: true])
        def changeLogSets = currentBuild.rawBuild.changeSets
@@ -28,14 +39,20 @@ node {
             def entries = changeLogSets[i].items
             for (int j = 0; j < entries.length; j++) {
                 def entry = entries[j]
-                echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
+                //echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
                 def files = new ArrayList(entry.affectedFiles)
                 for (int k = 0; k < files.size(); k++) {
                     def file = files[k]
-                    echo "  ${file.editType.name} ${file.path}"
+                    //echo "  ${file.editType.name} ${file.path}"
+                    builder.appendComponent(file.path)
                 }
             }
-        }
+       }
+
+       if(builder.appendComponent.size() == 0) {
+           currentBuild.result = 'NOTCHANGED'
+           sh 'exit 0'
+       }
    }
 
    stage('Check changes') {
