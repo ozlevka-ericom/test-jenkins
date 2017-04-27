@@ -31,7 +31,7 @@ class ComponentsBuilder {
 
 node {
 
-   def builder = comp.getBuilder()
+   def builder = new ComponentsBuilder()
    stage('Pull code') {
        git([url: 'https://github.com/EricomSoftwareLtd/SB.git', credentialsId: 'ozlevka-github', changelog: true])
        def changeLogSets = currentBuild.rawBuild.changeSets
