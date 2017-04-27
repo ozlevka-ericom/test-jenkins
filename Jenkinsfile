@@ -79,11 +79,12 @@ node {
 
                     for(i = 0; i < list_of_changes.size(); i++) {
                         def k = list_of_changes[i]
-                        println k
+                        echo k.toString()
+                        /*println k
                         def buildPath = builder.components[k]
                         echo buildPath
                         sh "cd ${buildPath} && ./_build.sh"
-                        echo "Param ${k} build success"
+                        echo "Param ${k} build success"*/
                     }
 
                 }
