@@ -66,11 +66,14 @@ node {
                         echo 'Fetch ubuntu image success'
                     }
 
-                    builder.changedComponents.each {
-                        def buildPath = builder.components[it.key]
+                    for ( int i = 0; i < builder.changedComponents.size(); i++ ) {
+
+                        final k = new String( builder.changedComponents.entrySet().toArray()[i].key )
+                        def buildPath = builder.components[k]
                         sh "cd ${buildPath} && ./_build.sh"
                         echo "Param ${it.key} build success"
                     }
+
                 }
 
                 stage('Test System') {
@@ -82,10 +85,12 @@ node {
                 }
 
                 stage('Push Images') {
-                    for(el in builder.changedComponents) {
-                        /*def buildPath = builder.components[el.key]
-                        sh "cd ${buildPath} && ./_upload.sh"*/
-                        echo "Param ${el.key} upload success"
+                    for ( int i = 0; i < builder.changedComponents.size(); i++ ) {
+
+                        final k = new String( builder.changedComponents.entrySet().toArray()[i].key )
+                        def buildPath = builder.components[k]
+                        sh "cd ${buildPath} && ./_upload.sh"
+                        echo "Param ${it.key} upload success"
                     }
                 }
         }
