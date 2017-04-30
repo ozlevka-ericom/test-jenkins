@@ -11,6 +11,7 @@ class ComponentsBuilder implements java.io.Serializable {
         components["NODEJS"] = "Containers/Docker/secure-remote-browser-ubuntu-nodejs-xdummy"
         components["CONSUL"] = "Containers/Docker/shield-configuration"
         components["TEST"] = "Containers/Docker/shield-test"
+        components["SQUID"] = "Containers/Docker/shield-squid-alpine"
     }
 
     def findComponent(String path) {
