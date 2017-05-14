@@ -1,4 +1,24 @@
 #!groovy
+/*class Container implements java.io.Serializable {
+    String path;
+    String containerName;
+    List<String> dependencies
+
+    Container() {}
+
+    Container(
+            String path,
+            String containerName) {
+        this.path = path;
+        this.containerName = containerName
+    }
+
+    def setDependencies(List<String> deps) {
+        dependencies = deps;
+    }
+}*/
+
+
 class ComponentsBuilder implements java.io.Serializable {
     def components = [:]
     def changedComponents = [:]
@@ -102,6 +122,15 @@ node {
                         sh "cd ${buildPath} && ./_upload.sh"
                         echo "Param ${k} upload success"
                     }
+                }
+
+                stage('Send Email') {
+                    emailext (
+                            subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                            body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+                            <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
+                            recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+                    )
                 }
         }
    } else {
