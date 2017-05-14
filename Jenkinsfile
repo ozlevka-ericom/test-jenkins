@@ -18,7 +18,7 @@
     }
 }*/
 
-def emails = ["Beny.Haddad@ericom.com", "lev.ozeryansky@ericom.com"]
+def emails = ["Beny.Haddad@ericom.com", "lev.ozeryansky@ericom.com", "Erez.Pasternak@ericom.com"]
 
 class ComponentsBuilder implements java.io.Serializable {
     def components = [:]
@@ -129,7 +129,7 @@ node {
                     emailext (
                             to: emails.join(","),
                             subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                            body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+                            body: """<p>SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
                             <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""//,
                             //recipientProviders: [[$class: 'RequesterRecipientProvider']]
                     )
