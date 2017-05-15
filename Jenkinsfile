@@ -23,6 +23,7 @@ def emails = ["Beny.Haddad@ericom.com", "lev.ozeryansky@ericom.com", "Erez.Paste
 class ComponentsBuilder implements java.io.Serializable {
     def components = [:]
     def changedComponents = [:]
+    def list_of_containers = ""
 
     ComponentsBuilder() {
         components["CEF"] = "Containers/Docker/shield-cef"
@@ -50,6 +51,7 @@ class ComponentsBuilder implements java.io.Serializable {
         def k = findComponent(path)
         if(k) {
             changedComponents[k] = true
+            https://hub.docker.com/r/securebrowsing/shield-cef/tags/
         }
     }
 
@@ -122,6 +124,7 @@ node {
                         def buildPath = builder.components[k]
                         sh "cd ${buildPath} && ./_upload.sh"
                         echo "Param ${k} upload success"
+                        list_of_containers = list_of_containers + ${buildPath} + ","
                     }
                 }
 
@@ -130,6 +133,7 @@ node {
                             to: emails.join(","),
                             subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                             body: """<p>SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+                            <p>List of Containers built and pushed: : ${list_of_containers}</p>
                             <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""//,
                             //recipientProviders: [[$class: 'RequesterRecipientProvider']]
                     )
