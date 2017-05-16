@@ -18,7 +18,7 @@
     }
 }*/
 
-def emails = ["Beny.Haddad@ericom.com", "lev.ozeryansky@ericom.com", "Erez.Pasternak@ericom.com"]
+def emails = ["Beny.Haddad@ericom.com", "lev.ozeryansky@ericom.com", "Erez.Pasternak@ericom.com", "shield-build@ericom.com"]
 
 class ComponentsBuilder implements java.io.Serializable {
     def components = [:]
@@ -26,14 +26,18 @@ class ComponentsBuilder implements java.io.Serializable {
     def list_of_containers = ""
 
     ComponentsBuilder() {
+        components["CONSUL"] = "Containers/Docker/shield-configuration"
+        components["ADMIN"] = "Containers/Docker/shield-admin"
+        components["CONSUL-ADMIN"] = "Containers/Docker/shield-admin-orig"
+        components["UBUNTU"] = "Containers/Docker/secure-remote-browser-ubuntu-base"
+        components["XDUMMY"] = "Containers/Docker/secure-remote-browser-ubuntu-nodejs-xdummy"
         components["CEF"] = "Containers/Docker/shield-cef"
+        components["PROXY"] = "Containers/Docker/shield-squid-alpine"
         components["ICAP"] = "Containers/Docker/shield-icap"
         components["ELK"] = "Containers/Docker/shield-elk"
         components["UBUNTU"] = "Containers/Docker/secure-remote-browser-ubuntu-base"
         components["NODEJS"] = "Containers/Docker/secure-remote-browser-ubuntu-nodejs-xdummy"
-        components["CONSUL"] = "Containers/Docker/shield-configuration"
-        components["TEST"] = "Containers/Docker/shield-test"
-        components["SQUID"] = "Containers/Docker/shield-squid-alpine"
+        //components["TEST"] = "Containers/Docker/shield-test"
     }
 
     def findComponent(String path) {
@@ -51,7 +55,6 @@ class ComponentsBuilder implements java.io.Serializable {
         def k = findComponent(path)
         if(k) {
             changedComponents[k] = true
-            https://hub.docker.com/r/securebrowsing/shield-cef/tags/
         }
     }
 
@@ -122,7 +125,7 @@ node {
                     for(i = 0; i < list_of_changes.size(); i++) {
                         def k = list_of_changes[i]
                         def buildPath = builder.components[k]
-                        sh "cd ${buildPath} && ./_upload.sh"
+                        //sh "cd ${buildPath} && ./_upload.sh"
                         echo "Param ${k} upload success"
                         list_of_containers = list_of_containers + ${buildPath} + ","
                     }
