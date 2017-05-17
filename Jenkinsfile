@@ -27,7 +27,7 @@ class ComponentsBuilder implements java.io.Serializable {
 
     ComponentsBuilder() {
         components["CONSUL"] = "Containers/Docker/shield-configuration"
-        components["ADMIN"] = "Containers/Docker/shield-admin"
+        //components["ADMIN"] = "Containers/Docker/shield-admin"
         components["CONSUL-ADMIN"] = "Containers/Docker/shield-admin-orig"
         components["UBUNTU"] = "Containers/Docker/secure-remote-browser-ubuntu-base"
         components["XDUMMY"] = "Containers/Docker/secure-remote-browser-ubuntu-nodejs-xdummy"
@@ -125,10 +125,12 @@ node {
                     for(i = 0; i < list_of_changes.size(); i++) {
                         def k = list_of_changes[i]
                         def buildPath = builder.components[k]
-                        //sh "cd ${buildPath} && ./_upload.sh"
+                        sh "cd ${buildPath} && ./_upload.sh"
                         echo "Param ${k} upload success"
                         list_of_containers = list_of_containers + ${buildPath} + ","
                     }
+
+                    echo "List of build containers: ${list_of_containers}"
                 }
 
                 stage('Send Email') {
