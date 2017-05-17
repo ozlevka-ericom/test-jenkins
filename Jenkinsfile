@@ -69,7 +69,7 @@ class ComponentsBuilder implements java.io.Serializable {
 node {
 
    def builder = new ComponentsBuilder()
-   def list_of_containers = ""
+   def list_of_containers = []
    stage('Pull code') {
        git([url: 'https://github.com/EricomSoftwareLtd/SB.git', credentialsId: '451bb7d7-5c99-4d21-aa3a-1c6a1027406b', changelog: true])
        def changeLogSets = currentBuild.rawBuild.changeSets
@@ -127,7 +127,7 @@ node {
                         def buildPath = builder.components[k]
                         sh "cd ${buildPath} && ./_upload.sh"
                         echo "Param ${k} upload success"
-                        list_of_containers = list_of_containers + ${buildPath} + ","
+                        list_of_containers << buildPath
                     }
 
                     echo "List of build containers: ${list_of_containers}"
