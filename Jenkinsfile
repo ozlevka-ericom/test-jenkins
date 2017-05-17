@@ -26,7 +26,7 @@ class ComponentsBuilder implements java.io.Serializable {
 
     ComponentsBuilder() {
         components["CONSUL"] = "Containers/Docker/shield-configuration"
-        //components["ADMIN"] = "Containers/Docker/shield-admin"
+        components["ADMIN"] = "Containers/Docker/shield-admin"
         components["CONSUL-ADMIN"] = "Containers/Docker/shield-admin-orig"
         components["UBUNTU"] = "Containers/Docker/secure-remote-browser-ubuntu-base"
         components["XDUMMY"] = "Containers/Docker/secure-remote-browser-ubuntu-nodejs-xdummy"
