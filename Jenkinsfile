@@ -23,7 +23,6 @@ def emails = ["Beny.Haddad@ericom.com", "lev.ozeryansky@ericom.com", "Erez.Paste
 class ComponentsBuilder implements java.io.Serializable {
     def components = [:]
     def changedComponents = [:]
-    def list_of_containers = ""
 
     ComponentsBuilder() {
         components["CONSUL"] = "Containers/Docker/shield-configuration"
@@ -70,6 +69,7 @@ class ComponentsBuilder implements java.io.Serializable {
 node {
 
    def builder = new ComponentsBuilder()
+   def list_of_containers = ""
    stage('Pull code') {
        git([url: 'https://github.com/EricomSoftwareLtd/SB.git', credentialsId: '451bb7d7-5c99-4d21-aa3a-1c6a1027406b', changelog: true])
        def changeLogSets = currentBuild.rawBuild.changeSets
