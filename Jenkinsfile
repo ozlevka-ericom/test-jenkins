@@ -18,8 +18,6 @@
     }
 }*/
 
-def emails = ["Beny.Haddad@ericom.com", "lev.ozeryansky@ericom.com", "Erez.Pasternak@ericom.com", "shield-build@ericom.com"]
-
 class ComponentsBuilder implements java.io.Serializable {
     def components = [:]
     def changedComponents = [:]
@@ -68,6 +66,7 @@ class ComponentsBuilder implements java.io.Serializable {
 
 @NonCPS
 def send_notification() {
+    def emails = ["Beny.Haddad@ericom.com", "lev.ozeryansky@ericom.com", "Erez.Pasternak@ericom.com", "shield-build@ericom.com"]
     emailext (
             to: emails.join(","),
             subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
