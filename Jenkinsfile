@@ -66,6 +66,18 @@ class ComponentsBuilder implements java.io.Serializable {
     }
 }
 
+@NonCPS
+def send_notification() {
+    emailext (
+            to: emails.join(","),
+            subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+            body: """<p>SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+                            <p>List of Containers built and pushed: : ${list_of_containers}</p>
+                            <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""//,
+            //recipientProviders: [[$class: 'RequesterRecipientProvider']]
+    )
+}
+
 node {
 
    def builder = new ComponentsBuilder()
@@ -97,52 +109,51 @@ node {
 
        withCredentials([[$class          : 'UsernamePasswordMultiBinding', credentialsId: 'beny-docker',
                              usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                stage('Login to docker') {
-                    sh 'docker logout && docker login -u $USERNAME -p $PASSWORD'
-                }
-
-                def list_of_changes = builder.changesList()
-                stage('Build Images') {
-
-                    for(i = 0; i < list_of_changes.size(); i++) {
-                        def k = list_of_changes[i]
-                        def buildPath = builder.components[k]
-                        sh "cd ${buildPath} && ./_build.sh"
-                        echo "Param ${k} build success"
+                try {
+                    stage('Login to docker') {
+                        sh 'docker logout && docker login -u $USERNAME -p $PASSWORD'
                     }
 
-                }
+                    def list_of_changes = builder.changesList()
+                    stage('Build Images') {
 
-                stage('Test System') {
-                    try {
-                        echo 'Run unitests....'
-                    } catch (err) {
-                        throw err
+                        for(i = 0; i < list_of_changes.size(); i++) {
+                            def k = list_of_changes[i]
+                            def buildPath = builder.components[k]
+                            sh "cd ${buildPath} && ./_build.sh"
+                            echo "Param ${k} build success"
+                        }
+
+                    }
+
+                    stage('Test System') {
+                        try {
+                            echo 'Run unitests....'
+                        } catch (err) {
+                            throw err
+                        }
+                    }
+
+                    stage('Push Images') {
+                        for(i = 0; i < list_of_changes.size(); i++) {
+                            def k = list_of_changes[i]
+                            def buildPath = builder.components[k]
+                            //sh "cd ${buildPath} && ./_upload.sh"
+                            echo "Param ${k} upload success"
+                            list_of_containers << buildPath
+                        }
+
+                        echo "List of build containers: ${list_of_containers}"
+                    }
+                } catch (Exception ex) {
+                    echo "Exception!!! ${ex}"
+                } finally {
+                    stage('Send Email') {
+                        send_notification()
                     }
                 }
 
-                stage('Push Images') {
-                    for(i = 0; i < list_of_changes.size(); i++) {
-                        def k = list_of_changes[i]
-                        def buildPath = builder.components[k]
-                        sh "cd ${buildPath} && ./_upload.sh"
-                        echo "Param ${k} upload success"
-                        list_of_containers << buildPath
-                    }
 
-                    echo "List of build containers: ${list_of_containers}"
-                }
-
-                stage('Send Email') {
-                    emailext (
-                            to: emails.join(","),
-                            subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                            body: """<p>SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-                            <p>List of Containers built and pushed: : ${list_of_containers}</p>
-                            <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""//,
-                            //recipientProviders: [[$class: 'RequesterRecipientProvider']]
-                    )
-                }
         }
    } else {
        echo 'Nothing changed'
