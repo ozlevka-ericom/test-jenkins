@@ -65,13 +65,14 @@ class ComponentsBuilder implements java.io.Serializable {
 }
 
 @NonCPS
-def send_notification() {
+def send_notification(containers) {
     def emails = ["Beny.Haddad@ericom.com", "lev.ozeryansky@ericom.com", "Erez.Pasternak@ericom.com", "shield-build@ericom.com"]
+    def result = currentBuild.result
     emailext (
             to: emails.join(","),
             subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
             body: """<p>SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-                            <p>List of Containers built and pushed: : ${list_of_containers}</p>
+                            <p>List of Containers built and pushed: : ${containers}</p>
                             <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""//,
             //recipientProviders: [[$class: 'RequesterRecipientProvider']]
     )
@@ -148,7 +149,7 @@ node {
                     echo "Exception!!! ${ex}"
                 } finally {
                     stage('Send Email') {
-                        send_notification()
+                        send_notification(list_of_containers)
                     }
                 }
 
