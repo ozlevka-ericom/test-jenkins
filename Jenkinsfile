@@ -66,8 +66,11 @@ class ComponentsBuilder implements java.io.Serializable {
 
 @NonCPS
 def send_notification(containers) {
-    def emails = ["Beny.Haddad@ericom.com", "lev.ozeryansky@ericom.com", "Erez.Pasternak@ericom.com", "shield-build@ericom.com"]
+    //def emails = ["Beny.Haddad@ericom.com", "lev.ozeryansky@ericom.com", "Erez.Pasternak@ericom.com", "shield-build@ericom.com"]
+    //Uncomment before merge
+    def emails = ["lev.ozeryansky@ericom.com"]
     def result = currentBuild.result
+
     emailext (
             to: emails.join(","),
             subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
