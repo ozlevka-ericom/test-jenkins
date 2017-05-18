@@ -74,7 +74,7 @@ def build_data = [
 def send_notification(data) {
     //def emails = ["Beny.Haddad@ericom.com", "lev.ozeryansky@ericom.com", "Erez.Pasternak@ericom.com", "shield-build@ericom.com"]
     //Uncomment before merge
-    def emails = ["lev.ozeryansky@ericom.com"]
+    def emails = ["shield-build@ericom.com"]
     def result = currentBuild.result
     def containers = data["containers"]
 
@@ -122,7 +122,7 @@ try {
        def list_of_containers = []
        stage('Pull code') {
            git([url: 'https://github.com/EricomSoftwareLtd/SB.git', credentialsId: '451bb7d7-5c99-4d21-aa3a-1c6a1027406b', changelog: true])
-           def changeLogSets = currentBuild.rawBuild.changeSets.mu
+           def changeLogSets = currentBuild.rawBuild.changeSets
            for (int i = 0; i < changeLogSets.size(); i++) {
                 def entries = changeLogSets[i].items
                 for (int j = 0; j < entries.length; j++) {
@@ -175,7 +175,7 @@ try {
                    for(i = 0; i < list_of_changes.size(); i++) {
                        def k = list_of_changes[i]
                        def buildPath = builder.components[k]
-                       //sh "cd ${buildPath} && ./_upload.sh"
+                       sh "cd ${buildPath} && ./_upload.sh"
                        echo "Param ${k} upload success"
                        list_of_containers << buildPath
                    }
