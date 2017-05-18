@@ -65,7 +65,7 @@ class ComponentsBuilder implements java.io.Serializable {
 }
 
 def build_data = [
-        "erros":[],
+        "errors":[],
         "containers":[]
 ]
 
@@ -76,16 +76,22 @@ def send_notification(data) {
     def emails = ["lev.ozeryansky@ericom.com"]
     def result = currentBuild.result
     def containers = data["containers"]
-    echo "Its build result: ${result}"
 
-    emailext (
-            to: emails.join(","),
-            subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-            body: """<p>SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+    if (result == 'SUCCESS' && ((List)containers).size().equals(new Integer(0))) {
+        echo "No changes found"
+    } else {
+
+        emailext(
+                to: emails.join(","),
+                subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: """<p>SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
                             <p>List of Containers built and pushed: : ${containers}</p>
-                            <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""//,
-            //recipientProviders: [[$class: 'RequesterRecipientProvider']]
-    )
+                            <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${
+                    env.BUILD_NUMBER
+                }]</a>&QUOT;</p>"""//,
+                //recipientProviders: [[$class: 'RequesterRecipientProvider']]
+        )
+    }
 }
 
 
