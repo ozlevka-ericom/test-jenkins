@@ -69,6 +69,12 @@ def build_data = [
         "containers":[]
 ]
 
+
+@NonCPS
+def prepare_log() {
+    return currentBuild.rawBuild.log.replaceAll(/\n/, '<br/>')
+}
+
 @NonCPS
 def send_notification(data) {
     //def emails = ["Beny.Haddad@ericom.com", "lev.ozeryansky@ericom.com", "Erez.Pasternak@ericom.com", "shield-build@ericom.com"]
@@ -77,7 +83,7 @@ def send_notification(data) {
     def result = currentBuild.result
     def containers = data["containers"]
 
-    echo "Its should be log: ${currentBuild.rawBuild.log}"
+
 
     if (result == null) {
         echo "No changes found"
@@ -101,6 +107,7 @@ def send_notification(data) {
                     subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                     body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
                                 <p>Errors: ${errors}</p>
+                                <p>Build log: ${prepare_log}</p>
                                 <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER
                     }]</a>&QUOT;</p>"""//,
                     //recipientProviders: [[$class: 'RequesterRecipientProvider']]
@@ -119,7 +126,7 @@ try {
        def list_of_containers = []
        stage('Pull code') {
            git([url: 'https://github.com/EricomSoftwareLtd/SB.git', credentialsId: '451bb7d7-5c99-4d21-aa3a-1c6a1027406b', changelog: true])
-           def changeLogSets = currentBuild.rawBuild.changeSets
+           def changeLogSets = currentBuild.rawBuild.changeSets.mu
            for (int i = 0; i < changeLogSets.size(); i++) {
                 def entries = changeLogSets[i].items
                 for (int j = 0; j < entries.length; j++) {
