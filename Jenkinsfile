@@ -81,16 +81,30 @@ def send_notification(data) {
         echo "No changes found"
     } else {
 
-        emailext(
-                to: emails.join(","),
-                subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                body: """<p>SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-                            <p>List of Containers built and pushed: : ${containers}</p>
-                            <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${
-                    env.BUILD_NUMBER
-                }]</a>&QUOT;</p>"""//,
-                //recipientProviders: [[$class: 'RequesterRecipientProvider']]
-        )
+        if(result == "SUCCESS") {
+            emailext(
+                    to: emails.join(","),
+                    subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                    body: """<p>SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+                                <p>List of Containers built and pushed: : ${containers}</p>
+                                <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${
+                        env.BUILD_NUMBER
+                    }]</a>&QUOT;</p>"""//,
+                    //recipientProviders: [[$class: 'RequesterRecipientProvider']]
+            )
+        } else {
+            def errors = data["errors"]
+            emailext(
+                    to: emails.join(","),
+                    subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                    body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+                                <p>Errors: ${errors}</p>
+                                <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER
+                    }]</a>&QUOT;</p>"""//,
+                    //recipientProviders: [[$class: 'RequesterRecipientProvider']]
+            )
+        }
+
     }
 }
 
@@ -105,7 +119,7 @@ try {
            git([url: 'https://github.com/EricomSoftwareLtd/SB.git', credentialsId: '451bb7d7-5c99-4d21-aa3a-1c6a1027406b', changelog: true])
            def changeLogSets = currentBuild.rawBuild.changeSets
            for (int i = 0; i < changeLogSets.size(); i++) {
-                def entries = changeLogSets[i].items
+                def entries = changeLogSets[i].items.shmaitems
                 for (int j = 0; j < entries.length; j++) {
                     def entry = entries[j]
                     //echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
