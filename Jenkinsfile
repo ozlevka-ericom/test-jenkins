@@ -79,6 +79,7 @@ def send_notification(data) {
 
     if (result == 'SUCCESS' && ((List)containers).size().equals(new Integer(0))) {
         echo "No changes found"
+        return 0
     } else {
 
         emailext(
