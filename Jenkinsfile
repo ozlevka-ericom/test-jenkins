@@ -77,7 +77,7 @@ def send_notification(data) {
     def result = currentBuild.result
     def containers = data["containers"]
 
-    if (result == 'SUCCESS' && ((List)containers).size().equals(new Integer(0))) {
+    if (result == 'SUCCESS' && ((List)containers).size() == 0) {
         echo "No changes found"
         return 0
     } else {
