@@ -74,7 +74,7 @@ def build_data = [
 def send_notification(data) {
     //def emails = ["Beny.Haddad@ericom.com", "lev.ozeryansky@ericom.com", "Erez.Pasternak@ericom.com", "shield-build@ericom.com"]
     //Uncomment before merge
-    def emails = ["shield-build@ericom.com"]
+    def emails = ["shield.build@ericom.com"]
     def result = currentBuild.result
     def containers = data["containers"]
 
