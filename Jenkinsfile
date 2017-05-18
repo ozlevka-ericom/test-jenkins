@@ -77,9 +77,8 @@ def send_notification(data) {
     def result = currentBuild.result
     def containers = data["containers"]
 
-    if (result == "SUCCESS" && containers.size() == 0) {
+    if (result == null) {
         echo "No changes found"
-        return 0
     } else {
 
         emailext(
