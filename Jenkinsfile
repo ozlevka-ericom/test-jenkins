@@ -71,11 +71,6 @@ def build_data = [
 
 
 @NonCPS
-def prepare_log() {
-    return currentBuild.rawBuild.log.replaceAll(/\n/, '<br/>')
-}
-
-@NonCPS
 def send_notification(data) {
     //def emails = ["Beny.Haddad@ericom.com", "lev.ozeryansky@ericom.com", "Erez.Pasternak@ericom.com", "shield-build@ericom.com"]
     //Uncomment before merge
@@ -102,12 +97,13 @@ def send_notification(data) {
             )
         } else {
             def errors = data["errors"]
+            def log = currentBuild.rawBuild.log.replaceAll(/\n/, '<br/>')
             emailext(
                     to: emails.join(","),
                     subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                     body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
                                 <p>Errors: ${errors}</p>
-                                <p>Build log: ${prepare_log}</p>
+                                <p>Build log: ${log}</p>
                                 <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER
                     }]</a>&QUOT;</p>"""//,
                     //recipientProviders: [[$class: 'RequesterRecipientProvider']]
