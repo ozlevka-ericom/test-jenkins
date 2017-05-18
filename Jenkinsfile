@@ -77,7 +77,7 @@ def send_notification(data) {
     def result = currentBuild.result
     def containers = data["containers"]
 
-    echo "Its manager: ${manager}"
+    echo "Its should be log: ${currentBuild.rawBuild.log}"
 
     if (result == null) {
         echo "No changes found"
