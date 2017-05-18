@@ -77,6 +77,8 @@ def send_notification(data) {
     def result = currentBuild.result
     def containers = data["containers"]
 
+    echo "Its manager: ${manager}"
+
     if (result == null) {
         echo "No changes found"
     } else {
@@ -119,7 +121,7 @@ try {
            git([url: 'https://github.com/EricomSoftwareLtd/SB.git', credentialsId: '451bb7d7-5c99-4d21-aa3a-1c6a1027406b', changelog: true])
            def changeLogSets = currentBuild.rawBuild.changeSets
            for (int i = 0; i < changeLogSets.size(); i++) {
-                def entries = changeLogSets[i].items.shmaitems
+                def entries = changeLogSets[i].items
                 for (int j = 0; j < entries.length; j++) {
                     def entry = entries[j]
                     //echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
