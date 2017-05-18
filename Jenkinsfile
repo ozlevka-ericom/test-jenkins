@@ -71,6 +71,8 @@ def send_notification(containers) {
     def emails = ["lev.ozeryansky@ericom.com"]
     def result = currentBuild.result
 
+    echo "Its build result: ${result}"
+
     emailext (
             to: emails.join(","),
             subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
