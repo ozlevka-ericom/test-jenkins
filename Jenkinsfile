@@ -166,8 +166,9 @@ try {
                }
 
                stage('Test System') {
-                   def res = build 'run-shield-tests', propagate: false
-                   def strRes = res.getResult
+                   def res = build job:'run-shield-tests', propagate: false
+                   def strRes = res.getResult()
+                   echo "Test system result: ${strRes}"
                    if(strRes != 'SUCCESS') {
                        def log = res.getRawBuild().getLog(200).join('\n')
                        echo log
