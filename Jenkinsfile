@@ -170,6 +170,7 @@ try {
                    def strRes = res.getResult()
                    echo "Test system result: ${strRes}"
                    if(strRes != 'SUCCESS') {
+                       echo 'Start fetch log'
                        def log = res.getRawBuild().getLog(200).join('\n')
                        echo log
                        throw new Exception('Test stage failed')
