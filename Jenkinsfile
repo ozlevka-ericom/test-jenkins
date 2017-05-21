@@ -169,7 +169,7 @@ try {
                    def res = build job:'run-shield-tests', propagate: false
                    def strRes = res.getResult()
                    echo "Test system result: ${strRes}"
-                   if(strRes != 'SUCCESS') {
+                   if(!strRes.equals('SUCCESS')) {
                        echo 'Start fetch log'
                        def log = res.getRawBuild().getLog(200).join('\n')
                        echo log
