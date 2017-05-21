@@ -177,7 +177,7 @@ try {
                    for(i = 0; i < list_of_changes.size(); i++) {
                        def k = list_of_changes[i]
                        def buildPath = builder.components[k]
-                       sh "cd ${buildPath} && chmod +x ./_jenkins_upload.sh && ./_jenkins_upload.sh ${tag}-${env.BUILD_NUMBER}"
+                       sh "cd ${buildPath} && chmod +x ./_jenkins_upload.sh && ./_upload.sh ${tag}-${env.BUILD_NUMBER}"
                        echo "Param ${k} upload success"
                        list_of_containers << "${buildPath} by tag ${tag}-${env.BUILD_NUMBER}"
                    }
