@@ -120,6 +120,8 @@ try {
 
        def builder = new ComponentsBuilder()
        def list_of_containers = []
+       def startDate = new Date()
+       def tag = startDate.format('yyMMdd-HH.mm')
        stage('Pull code') {
            git([url: 'https://github.com/EricomSoftwareLtd/SB.git', credentialsId: '451bb7d7-5c99-4d21-aa3a-1c6a1027406b', changelog: true])
            def changeLogSets = currentBuild.rawBuild.changeSets
@@ -175,7 +177,7 @@ try {
                    for(i = 0; i < list_of_changes.size(); i++) {
                        def k = list_of_changes[i]
                        def buildPath = builder.components[k]
-                       sh "cd ${buildPath} && ./_upload.sh"
+                       sh "cd ${buildPath} && ./_jenkins_upload.sh ${tag}"
                        echo "Param ${k} upload success"
                        list_of_containers << buildPath
                    }
