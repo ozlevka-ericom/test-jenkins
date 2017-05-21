@@ -166,11 +166,7 @@ try {
                }
 
                stage('Test System') {
-                   try {
-                       echo 'Run unitests....'
-                   } catch (err) {
-                       throw err
-                   }
+                   build 'run-shield-tests'
                }
 
                stage('Push Images') {
