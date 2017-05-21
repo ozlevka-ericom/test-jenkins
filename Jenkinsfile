@@ -105,7 +105,8 @@ def send_notification(data) {
                                 <p>Errors: ${errors}</p>
                                 <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER
                     }]</a>&QUOT;</p>""",
-                    attachLog: true
+                    attachLog: true,
+                    compressLog: true
             )
         }
 
@@ -165,7 +166,13 @@ try {
                }
 
                stage('Test System') {
-                   build 'run-shield-tests'
+                   def res = build 'run-shield-tests', propagate: false
+                   def strRes = res.getResult
+                   if(strRes != 'SUCCESS') {
+                       def log = res.getRawBuild().getLog(200).join('\n')
+                       echo log
+                       throw new Exception('Test stage failed')
+                   }
                }
 
                stage('Push Images') {
