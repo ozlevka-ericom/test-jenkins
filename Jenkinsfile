@@ -179,7 +179,7 @@ try {
                        def buildPath = builder.components[k]
                        sh "cd ${buildPath} && chmod +x ./_jenkins_upload.sh && ./_jenkins_upload.sh ${tag}-${env.BUILD_NUMBER}"
                        echo "Param ${k} upload success"
-                       list_of_containers << buildPath
+                       list_of_containers << "${buildPath} by tag ${tag}-${env.BUILD_NUMBER}"
                    }
 
                    echo "List of build containers: ${list_of_containers}"
