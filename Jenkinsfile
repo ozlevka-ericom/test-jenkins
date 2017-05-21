@@ -74,7 +74,7 @@ def build_data = [
 def send_notification(data) {
     //def emails = ["Beny.Haddad@ericom.com", "lev.ozeryansky@ericom.com", "Erez.Pasternak@ericom.com", "shield-build@ericom.com"]
     //Uncomment before merge
-    def emails = ["shield.build@ericom.com"]
+    def emails = ["shield.build@ericom.com", "lev.ozeryansky@ericom.com"]
     def result = currentBuild.result
     def containers = data["containers"]
 
@@ -177,7 +177,7 @@ try {
                    for(i = 0; i < list_of_changes.size(); i++) {
                        def k = list_of_changes[i]
                        def buildPath = builder.components[k]
-                       sh "cd ${buildPath} && ./_jenkins_upload.sh ${tag}-${env.BUILD_NUMBER}"
+                       sh "cd ${buildPath} && chmod +x ./_jenkins_upload.sh && ./_jenkins_upload.sh ${tag}-${env.BUILD_NUMBER}"
                        echo "Param ${k} upload success"
                        list_of_containers << buildPath
                    }
