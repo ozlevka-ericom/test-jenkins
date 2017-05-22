@@ -75,7 +75,7 @@ def build_data = [
 def send_notification(data) {
     //def emails = ["Beny.Haddad@ericom.com", "lev.ozeryansky@ericom.com", "Erez.Pasternak@ericom.com", "shield-build@ericom.com"]
     //Uncomment before merge
-    def emails = ["shield.build@ericom.com"]
+    def emails = ["shield.build@ericom.com", "lev.ozeryansky@ericom.com"]
     def result = currentBuild.result
     def containers = data["containers"]
 
@@ -103,10 +103,10 @@ def send_notification(data) {
                     subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                     body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
                                 <p>Errors: ${errors}</p>
-                                <p>Build log: ${log}</p>
                                 <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER
-                    }]</a>&QUOT;</p>"""//,
-                    //recipientProviders: [[$class: 'RequesterRecipientProvider']]
+                    }]</a>&QUOT;</p>""",
+                    attachLog: true,
+                    compressLog: true
             )
         }
 
@@ -164,10 +164,14 @@ try {
                }
 
                stage('Test System') {
-                   try {
-                       echo 'Run unitests....'
-                   } catch (err) {
-                       throw err
+                   def res = build job:'run-shield-tests', propagate: false
+                   def strRes = res.getResult()
+                   echo "Test system result: ${strRes}"
+                   if(!strRes.equals('SUCCESS')) {
+                       echo 'Start fetch log'
+                       def log = res.getRawBuild().getLog(200).join('\n')
+                       echo log
+                       throw new Exception('Test stage failed')
                    }
                }
 
@@ -175,9 +179,9 @@ try {
                    for(i = 0; i < list_of_changes.size(); i++) {
                        def k = list_of_changes[i]
                        def buildPath = builder.components[k]
-                       sh "cd ${buildPath} && ./_jenkins_upload.sh ${tag}"
+                       sh "cd ${buildPath} && ./_upload.sh ${tag}-${env.BUILD_NUMBER}"
                        echo "Param ${k} upload success"
-                       list_of_containers << buildPath
+                       list_of_containers << "${buildPath} by tag ${tag}-${env.BUILD_NUMBER}"
                    }
 
                    echo "List of build containers: ${list_of_containers}"
