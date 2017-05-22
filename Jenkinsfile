@@ -34,6 +34,7 @@ class ComponentsBuilder implements java.io.Serializable {
         components["ELK"] = "Containers/Docker/shield-elk"
         components["UBUNTU"] = "Containers/Docker/secure-remote-browser-ubuntu-base"
         components["NODEJS"] = "Containers/Docker/secure-remote-browser-ubuntu-nodejs-xdummy"
+        components["BROKER"] = "Containers/Docker/shield-broker"
         //components["TEST"] = "Containers/Docker/shield-test"
     }
 
@@ -78,8 +79,6 @@ def send_notification(data) {
     def result = currentBuild.result
     def containers = data["containers"]
 
-
-
     if (result == null) {
         echo "No changes found"
     } else {
@@ -89,10 +88,11 @@ def send_notification(data) {
                     to: emails.join(","),
                     subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                     body: """<p>SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-                                <p>List of Containers built and pushed: : ${containers}</p>
+                                <p>List of Containers built and pushed: ${containers}</p>
+                                <p>Tag: ${tag}</p>
                                 <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${
                         env.BUILD_NUMBER
-                    }]</a>&QUOT;</p>"""//,
+                    }]</a>&QUOT;</p> """//,
                     //recipientProviders: [[$class: 'RequesterRecipientProvider']]
             )
         } else {
@@ -112,8 +112,6 @@ def send_notification(data) {
 
     }
 }
-
-
 
 try {
     node {
