@@ -79,6 +79,8 @@ def send_notification(data) {
     def result = currentBuild.result
     def containers = data["containers"]
 
+
+
     if (result == null) {
         echo "No changes found"
     } else {
@@ -89,7 +91,6 @@ def send_notification(data) {
                     subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                     body: """<p>SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
                                 <p>List of Containers built and pushed: ${containers}</p>
-                                <p>Tag: ${tag}</p>
                                 <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${
                         env.BUILD_NUMBER
                     }]</a>&QUOT;</p> """//,
@@ -103,6 +104,7 @@ def send_notification(data) {
                     subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                     body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
                                 <p>Errors: ${errors}</p>
+                                <p>Build log: ${log}</p>
                                 <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER
                     }]</a>&QUOT;</p>""",
                     attachLog: true,
@@ -112,6 +114,8 @@ def send_notification(data) {
 
     }
 }
+
+
 
 try {
     node {
