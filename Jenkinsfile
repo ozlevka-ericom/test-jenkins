@@ -27,12 +27,10 @@ class ComponentsBuilder implements java.io.Serializable {
         components["ADMIN"] = "Containers/Docker/shield-admin"
         components["CONSUL-ADMIN"] = "Containers/Docker/shield-admin-orig"
         components["UBUNTU"] = "Containers/Docker/secure-remote-browser-ubuntu-base"
-        components["XDUMMY"] = "Containers/Docker/secure-remote-browser-ubuntu-nodejs-xdummy"
         components["CEF"] = "Containers/Docker/shield-cef"
         components["PROXY"] = "Containers/Docker/shield-squid-alpine"
         components["ICAP"] = "Containers/Docker/shield-icap"
         components["ELK"] = "Containers/Docker/shield-elk"
-        components["UBUNTU"] = "Containers/Docker/secure-remote-browser-ubuntu-base"
         components["NODEJS"] = "Containers/Docker/secure-remote-browser-ubuntu-nodejs-xdummy"
         components["BROKER"] = "Containers/Docker/shield-broker"
         components["PORTAINER"] = "Containers/Docker/shield-portainer"
@@ -143,9 +141,11 @@ try {
        }
 
        if (builder.changedComponents.size() > 0) {
-           stage('Make params') {
-               withEnv(["REPO_CWD=${pwd()}"]) {
-                    sh 'echo $REPO_CWD'
+           stage('Clean containers') {
+               try {
+                   sh "sudo docker rm \$(sudo docker kill \$(sudo docker ps | grep -v jenkins | awk '{print \$1}' | grep -vi container))"
+               } catch (Exception e) {
+                   echo e.toString()
                }
            }
 
